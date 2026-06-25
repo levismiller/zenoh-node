@@ -3,6 +3,16 @@ project(zenoh_node)
 
 include(FetchContent)
 
+# Find cargo at configure time so the build step does not rely on PATH
+find_program(CARGO_EXECUTABLE
+  NAMES cargo
+  HINTS
+    "$ENV{HOME}/.cargo/bin"
+    "$ENV{CARGO_HOME}/bin"
+  REQUIRED
+)
+message(STATUS "Found cargo: ${CARGO_EXECUTABLE}")
+
 # zenoh-cpp is header-only — no build step needed
 FetchContent_Declare(
   zenoh_cpp
@@ -12,12 +22,17 @@ FetchContent_Declare(
 )
 
 # zenoh-c is the compiled Rust/C library that zenoh-cpp wraps.
-# Requires Rust + Cargo toolchain at build time.
+# PATCH_COMMAND replaces the bare 'cargo' invocation with the full path so
+# the make build step does not depend on cargo being in PATH at build time.
 FetchContent_Declare(
   zenoh_c
   GIT_REPOSITORY https://github.com/eclipse-zenoh/zenoh-c.git
   GIT_TAG        1.9.0
   GIT_SHALLOW    TRUE
+  PATCH_COMMAND  ${CMAKE_COMMAND}
+    -DSOURCE_DIR=<SOURCE_DIR>
+    -DCARGO=${CARGO_EXECUTABLE}
+    -P ${CMAKE_SOURCE_DIR}/cmake/patch-zenoh-c-cargo.cmake
 )
 
 FetchContent_MakeAvailable(zenoh_c zenoh_cpp)
