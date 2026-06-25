@@ -3,6 +3,9 @@ project(zenoh_node)
 
 include(FetchContent)
 
+# Rust/Cargo is installed to ~/.cargo/bin — ensure it is on PATH for zenoh-c's build step
+set(ENV{PATH} "$ENV{HOME}/.cargo/bin:$ENV{PATH}")
+
 # zenoh-cpp is header-only — no build step needed
 FetchContent_Declare(
   zenoh_cpp
