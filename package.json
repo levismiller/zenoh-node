@@ -1,0 +1,22 @@
+{
+  "name": "zenoh-node",
+  "version": "0.1.0",
+  "description": "Native Node.js bindings for Zenoh — peer-to-peer pub/sub/query",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "scripts": {
+    "build": "cmake-js build",
+    "rebuild": "cmake-js rebuild",
+    "install": "cmake-js build",
+    "clean": "cmake-js clean"
+  },
+  "dependencies": {
+    "node-addon-api": "^8.0.0"
+  },
+  "devDependencies": {
+    "cmake-js": "^7.0.0"
+  }
+}
