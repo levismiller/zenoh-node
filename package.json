@@ -16,5 +16,8 @@
   "dependencies": {
     "cmake-js": "^7.0.0",
     "node-addon-api": "^8.0.0"
+  },
+  "publishConfig": {
+    "registry": "https://tools.fortemtech.com/artifactory/api/npm/npm-local/"
   }
 }
