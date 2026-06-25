@@ -8,9 +8,9 @@
     "node": ">=18.0.0"
   },
   "scripts": {
-    "build": "cmake-js build",
-    "rebuild": "cmake-js rebuild",
-    "install": "cmake-js build",
+    "build": ". $HOME/.cargo/env 2>/dev/null; cmake-js build",
+    "rebuild": ". $HOME/.cargo/env 2>/dev/null; cmake-js rebuild",
+    "install": ". $HOME/.cargo/env 2>/dev/null; cmake-js build",
     "clean": "cmake-js clean"
   },
   "dependencies": {
