@@ -40,8 +40,18 @@ FetchContent_MakeAvailable(zenoh_c zenoh_cpp)
 # zenoh-cpp is header-only — grab its include path from the fetched source
 FetchContent_GetProperties(zenoh_cpp SOURCE_DIR ZENOH_CPP_SOURCE_DIR)
 
-# node-addon-api ships with napi.h — reference it directly from node_modules
-set(NODE_ADDON_API_DIR "${CMAKE_SOURCE_DIR}/node_modules/node-addon-api")
+# node-addon-api may be hoisted by the consuming project's package manager,
+# so use Node's own resolver rather than a hardcoded relative path.
+execute_process(
+  COMMAND node -e "process.stdout.write(require('node-addon-api').include.replace(/\"/g, ''))"
+  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+  OUTPUT_VARIABLE NODE_ADDON_API_DIR
+  OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+if(NOT EXISTS "${NODE_ADDON_API_DIR}/napi.h")
+  message(FATAL_ERROR "napi.h not found — node-addon-api not installed or not resolvable from ${CMAKE_SOURCE_DIR}")
+endif()
+message(STATUS "node-addon-api: ${NODE_ADDON_API_DIR}")
 
 add_library(${PROJECT_NAME} SHARED src/zenoh.cpp ${CMAKE_JS_SRC})
 set_target_properties(${PROJECT_NAME} PROPERTIES PREFIX "" SUFFIX ".node")
