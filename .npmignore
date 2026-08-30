@@ -1,0 +1,12 @@
+src/
+build/
+cmake/
+CMakeLists.txt
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+_deps/
+node_modules/
+*.dylib
+.git/

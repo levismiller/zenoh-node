@@ -1,5 +1,3 @@
 'use strict'
 
-const binding = require('./build/Release/zenoh_node.node')
-
-module.exports = binding
+module.exports = require('node-gyp-build')(__dirname)

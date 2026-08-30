@@ -1,23 +1,59 @@
 {
   "name": "zenoh-node",
-  "version": "0.1.0",
-  "description": "Native Node.js bindings for Zenoh — peer-to-peer pub/sub/query",
+  "version": "0.1.1",
+  "description": "Native Node.js bindings for Zenoh — brokerless, peer-to-peer pub/sub, query and storage with no WebSocket overhead",
   "main": "index.js",
   "types": "index.d.ts",
+  "keywords": [
+    "zenoh",
+    "zenoh-node",
+    "zenoh-c",
+    "napi",
+    "n-api",
+    "native-addon",
+    "pub-sub",
+    "publish-subscribe",
+    "peer-to-peer",
+    "p2p",
+    "brokerless",
+    "messaging",
+    "message-bus",
+    "ipc",
+    "telemetry",
+    "robotics",
+    "ros2",
+    "edge",
+    "low-latency",
+    "real-time"
+  ],
+  "license": "MIT",
+  "author": "Levi Miller <l3vi@protonmail.ch>",
+  "homepage": "https://github.com/levismiller/zenoh-node#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/levismiller/zenoh-node.git"
+  },
+  "bugs": {
+    "url": "https://github.com/levismiller/zenoh-node/issues"
+  },
   "engines": {
     "node": ">=18.0.0"
+  },
+  "binary": {
+    "napi_versions": [8]
   },
   "scripts": {
     "build": ". $HOME/.cargo/env 2>/dev/null; cmake-js build",
     "rebuild": ". $HOME/.cargo/env 2>/dev/null; cmake-js rebuild",
-    "install": ". $HOME/.cargo/env 2>/dev/null; cmake-js build",
-    "clean": "cmake-js clean"
+    "clean": "cmake-js clean",
+    "build:prebuilds": "npm run build:prebuilds:x64 && npm run build:prebuilds:arm64",
+    "build:prebuilds:x64": "/usr/local/bin/docker run --rm --platform linux/amd64 -e CARGO_HOME=/root/.cargo -e RUSTUP_HOME=/root/.rustup -v $(pwd):/src:ro -v $(pwd)/prebuilds:/output -v zenoh-node-cargo-x64:/root/.cargo/registry -v zenoh-node-build-x64:/work/build node:24-slim sh -c \"apt-get update -qq && apt-get install -y -qq git python3 make g++ cmake curl > /dev/null 2>&1 && curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain stable > /dev/null 2>&1 && export PATH=/root/.cargo/bin:\\$PATH && mkdir -p /usr/local/cargo/bin && ln -sf /root/.cargo/bin/cargo /usr/local/cargo/bin/cargo && ln -sf /root/.cargo/bin/rustc /usr/local/cargo/bin/rustc && mkdir -p /work && cp -r /src/. /work/ && rm -rf /work/build/CMakeCache.txt /work/build/CMakeFiles /work/build/_deps/zenoh_c-build/CMakeCache.txt /work/build/_deps/zenoh_c-build/CMakeFiles && cd /work && npm install --ignore-scripts > /dev/null 2>&1 && ./node_modules/.bin/cmake-js build && mkdir -p /output/linux-x64 && cp build/Release/zenoh_node.node /output/linux-x64/node.napi.node && echo PREBUILD_DONE_x64\"",
+    "build:prebuilds:arm64": "/usr/local/bin/docker run --rm --platform linux/arm64 -e CARGO_HOME=/root/.cargo -e RUSTUP_HOME=/root/.rustup -v $(pwd):/src:ro -v $(pwd)/prebuilds:/output -v zenoh-node-cargo-arm64:/root/.cargo/registry -v zenoh-node-build-arm64:/work/build node:24-slim sh -c \"apt-get update -qq && apt-get install -y -qq git python3 make g++ cmake curl > /dev/null 2>&1 && curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain stable > /dev/null 2>&1 && export PATH=/root/.cargo/bin:\\$PATH && mkdir -p /usr/local/cargo/bin && ln -sf /root/.cargo/bin/cargo /usr/local/cargo/bin/cargo && ln -sf /root/.cargo/bin/rustc /usr/local/cargo/bin/rustc && mkdir -p /work && cp -r /src/. /work/ && rm -rf /work/build/CMakeCache.txt /work/build/CMakeFiles /work/build/_deps/zenoh_c-build/CMakeCache.txt /work/build/_deps/zenoh_c-build/CMakeFiles && cd /work && npm install --ignore-scripts > /dev/null 2>&1 && ./node_modules/.bin/cmake-js build && mkdir -p /output/linux-arm64 && cp build/Release/zenoh_node.node /output/linux-arm64/node.napi.node && echo PREBUILD_DONE_arm64\""
   },
   "dependencies": {
     "cmake-js": "^7.0.0",
-    "node-addon-api": "^8.0.0"
-  },
-  "publishConfig": {
-    "registry": "https://tools.fortemtech.com/artifactory/api/npm/npm-local/"
+    "node-addon-api": "^8.0.0",
+    "node-api-headers": "^1.1.0",
+    "node-gyp-build": "^4.8.0"
   }
 }

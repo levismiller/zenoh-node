@@ -35,6 +35,7 @@ FetchContent_Declare(
     -P ${CMAKE_SOURCE_DIR}/cmake/patch-zenoh-c-cargo.cmake
 )
 
+set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(zenoh_c zenoh_cpp)
 
 # zenoh-cpp is header-only — grab its include path from the fetched source
@@ -64,7 +65,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 
 target_link_libraries(${PROJECT_NAME}
   ${CMAKE_JS_LIB}
-  zenohc::lib
+  zenohc::static
 )
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE
